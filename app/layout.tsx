@@ -11,6 +11,7 @@ import Link from "next/link";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import bootstrap CSS
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer/page";
+import TopRecipes from "./components/Top_recipes";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`

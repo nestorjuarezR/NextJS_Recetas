@@ -5,6 +5,36 @@ import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
+
+
+export const createUser = async (formData: FormData) => {
+  try {
+    const supabase = await createClient();
+    const first_name = formData.get('first_name');
+    const last_name = formData.get('last_name');
+    const age = formData.get('age');
+
+    const{error} = await supabase.from('users').insert({
+      first_name : first_name,
+      last_name : last_name,
+      age: age,
+    });
+
+    if (error){
+      return false;
+    }
+
+    return true;
+
+  } catch (error) {
+    console.log(error)
+    return false;
+    
+  }
+};
+
+
+
 export const signUpAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
   const password = formData.get("password")?.toString();

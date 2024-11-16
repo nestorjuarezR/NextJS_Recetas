@@ -3,6 +3,7 @@ import Link from "next/link";
 
 export default async function Index() {
   return (
+    
     <div
       className="parallax"
       style={{
@@ -27,6 +28,9 @@ export default async function Index() {
       </div>
 
     </div>
+
+
+      
 
     
   );

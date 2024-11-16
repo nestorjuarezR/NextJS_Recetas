@@ -2,7 +2,9 @@
 
 // pages/index.js
 import styles from './RegistrationForm.module.css';
-import { useState } from "react";
+import React, { useState } from "react";
+import {createUser} from "../actions";
+import { createClient } from "@/utils/supabase/client";
 
 
 type User = {
@@ -13,9 +15,20 @@ type User = {
   created_at?: string;
 };
 
+const initialState = {
+  id: -1,
+  first_name: '',
+  last_name: '',
+  age: 0,
+}
+
+const supabase =  createClient();
 
 
-export default function RegistrationForm() {
+const RegistrationForm = () => {
+
+  const [formValues, setFormValues] = useState<User>(initialState);
+
   const [name, setName] = useState("");
   const [lastName, setLastName] = useState("");
   const [age, setAge] = useState("");
@@ -34,6 +47,22 @@ export default function RegistrationForm() {
     });
   };
 
+
+  const handleFormAction = async (formData: FormData) => {
+    if (formValues.id === -1){
+      // Es un nuevo usuario
+      await createUser(formData);
+    }
+    setFormValues(initialState);
+  };
+
+
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const {name, value} = e.target;
+
+    setFormValues((prevFormValues) => ({...prevFormValues, [name]: value}));
+  };
+
   return (
     <section className={`${styles.h100} ${styles.hCustom}`}>
       <div className="container py-5 h-100">
@@ -43,15 +72,17 @@ export default function RegistrationForm() {
               <div className="card-body p-4 p-md-5">
                 <h3 className="mb-4 pb-2 pb-md-0 mb-md-5 px-md-2 text-center">Registro</h3>
                 
-                <form className="px-md-2" onSubmit={handleSubmit}>
+                <form className="px-md-2" action={handleFormAction}>
                   {/* Nombre */}
                   <div className="form-outline mb-4">
                     <input
                       type="text"
-                      id="form3Example1q"
+                      name="first_name"
                       className="form-control"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
+                      maxLength={100}
+                      minLength={2}
+                      value={formValues.first_name}
+                      onChange={handleFormChange}
                       required
                     />
                     <label className="form-label" htmlFor="form3Example1q">Name</label>
@@ -61,10 +92,12 @@ export default function RegistrationForm() {
                   <div className="form-outline mb-4">
                     <input
                       type="text"
-                      id="form3Example1q"
+                      name="last_name"
                       className="form-control"
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
+                      value={formValues.last_name}
+                      onChange={handleFormChange}
+                      maxLength={100}
+                      minLength={3}
                       required
                     />
                     <label className="form-label" htmlFor="form3Example1q">Last Name</label>
@@ -77,15 +110,17 @@ export default function RegistrationForm() {
                         <input
                           type="text"
                           className="form-control"
-                          id="age"
-                          value={age}
-                          onChange={(e) => setAge(e.target.value)}
+                          name="age"
+                          value={formValues.age}
+                          onChange={handleFormChange}
+                          min={1}
+                          maxLength={100}
                         />
                         <label htmlFor="age" className="form-label">Age</label>
                       </div>
                     </div>
                     {/* Genero */}
-                    <div className="col-md-6 mb-4">
+                    {/* <div className="col-md-6 mb-4">
                       <select
                         className={styles.formSelect}
                         value={gender}
@@ -96,7 +131,7 @@ export default function RegistrationForm() {
                         <option value="Male">Male</option>
                         <option value="Other">Other</option>
                       </select>
-                    </div>
+                    </div> */}
                   </div>
 
                   <div className="row mb-4 pb-2 pb-md-0 mb-md-5">
@@ -124,3 +159,6 @@ export default function RegistrationForm() {
     </section>
   );
 }
+
+
+export default RegistrationForm;
