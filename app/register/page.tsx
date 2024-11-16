@@ -5,9 +5,11 @@ import styles from './RegistrationForm.module.css';
 import React, { useState } from "react";
 import {createUser} from "../actions";
 import { createClient } from "@/utils/supabase/client";
+import { useRouter } from "next/navigation"; // Importa useRouter
 
 
 type User = {
+  email: string;
   id: number;
   first_name : string;
   last_name : string;
@@ -20,6 +22,7 @@ const initialState = {
   first_name: '',
   last_name: '',
   age: 0,
+  email: '',
 }
 
 const supabase =  createClient();
@@ -28,30 +31,18 @@ const supabase =  createClient();
 const RegistrationForm = () => {
 
   const [formValues, setFormValues] = useState<User>(initialState);
+  const router = useRouter(); // Inicializa useRouter
 
-  const [name, setName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [age, setAge] = useState("");
-  const [gender, setGender] = useState("");
-  const [email, setEmail] = useState("");
 
-  const handleSubmit = (e: { preventDefault: () => void; }) => {
-    e.preventDefault(); // Evita el refresco de la página
-
-    console.log({
-      name,
-      lastName,
-      age,
-      gender,
-      email,
-    });
-  };
 
 
   const handleFormAction = async (formData: FormData) => {
     if (formValues.id === -1){
       // Es un nuevo usuario
       await createUser(formData);
+      //Redirigir a otra pagina despues de enviar los datos
+      router.push("/");
+
     }
     setFormValues(initialState);
   };
@@ -75,6 +66,7 @@ const RegistrationForm = () => {
                 <form className="px-md-2" action={handleFormAction}>
                   {/* Nombre */}
                   <div className="form-outline mb-4">
+                  <label className="form-label" htmlFor="form3Example1q">Name</label>
                     <input
                       type="text"
                       name="first_name"
@@ -85,11 +77,11 @@ const RegistrationForm = () => {
                       onChange={handleFormChange}
                       required
                     />
-                    <label className="form-label" htmlFor="form3Example1q">Name</label>
                   </div>
 
                   {/* Apellido */}
                   <div className="form-outline mb-4">
+                  <label className="form-label" htmlFor="form3Example1q">Last Name</label>
                     <input
                       type="text"
                       name="last_name"
@@ -100,12 +92,12 @@ const RegistrationForm = () => {
                       minLength={3}
                       required
                     />
-                    <label className="form-label" htmlFor="form3Example1q">Last Name</label>
                   </div>
 
                   <div className="row">
                     {/* Edad */}
                     <div className="col-md-6 mb-4">
+                    <label htmlFor="age" className="form-label">Age</label>
                       <div className="form-outline datepicker">
                         <input
                           type="text"
@@ -116,37 +108,22 @@ const RegistrationForm = () => {
                           min={1}
                           maxLength={100}
                         />
-                        <label htmlFor="age" className="form-label">Age</label>
                       </div>
                     </div>
-                    {/* Genero */}
-                    {/* <div className="col-md-6 mb-4">
-                      <select
-                        className={styles.formSelect}
-                        value={gender}
-                        onChange={(e) => setGender(e.target.value)}
-                      >
-                        <option value="" disabled>Genero</option>
-                        <option value="Female">Female</option>
-                        <option value="Male">Male</option>
-                        <option value="Other">Other</option>
-                      </select>
-                    </div> */}
                   </div>
 
-                  <div className="row mb-4 pb-2 pb-md-0 mb-md-5">
-                    <div className="col-md-6">
-                      <div className="form-outline">
-                        <input
-                          type="text"
-                          id="form3Example1w"
-                          className="form-control"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                        />
-                        <label className="form-label" htmlFor="form3Example1w">Correo electronico</label>
-                      </div>
-                    </div>
+                  <div className="form-outline mb-4">
+                  <label className="form-label" htmlFor="form3Example1q">Correo Electronico</label>
+                    <input
+                      type="text"
+                      name="email"
+                      className="form-control"
+                      value={formValues.email}
+                      onChange={handleFormChange}
+                      maxLength={100}
+                      minLength={3}
+                      required
+                    />
                   </div>
 
                   <button type="submit" className="btn btn-success btn-lg mb-1">Registro</button>

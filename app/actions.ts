@@ -13,11 +13,13 @@ export const createUser = async (formData: FormData) => {
     const first_name = formData.get('first_name');
     const last_name = formData.get('last_name');
     const age = formData.get('age');
+    const email = formData.get('email');
 
     const{error} = await supabase.from('users').insert({
       first_name : first_name,
       last_name : last_name,
       age: age,
+      email: email
     });
 
     if (error){
