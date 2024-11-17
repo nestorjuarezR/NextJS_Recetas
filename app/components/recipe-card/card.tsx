@@ -37,5 +37,6 @@ export function RecipeCard({ recipe }: { recipe: Recipe }) {
         <button className="btn btn-primary w-100">View Recipe</button>
       </div>
     </div>
+
   );
 }
