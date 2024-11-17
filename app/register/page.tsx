@@ -41,7 +41,7 @@ const RegistrationForm = () => {
       // Es un nuevo usuario
       await createUser(formData);
       //Redirigir a otra pagina despues de enviar los datos
-      router.push("/");
+      router.push("/home");
 
     }
     setFormValues(initialState);
